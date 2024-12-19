@@ -2,9 +2,9 @@
 
 # -- Project information
 
-project = 'Recorder'
-#copyright = '2021, Graziella'
-#author = 'Graziella'
+project = 'VerifyIO'
+copyright = '2024, Chen Wang'
+author = 'Chen Wang'
 
 #release = '0.1'
 #version = '0.1.0'
@@ -29,7 +29,6 @@ templates_path = ['_templates']
 
 # -- Options for HTML output
 
-#html_theme = 'sphinx_rtd_theme'
 html_theme = 'furo'
 
 # -- Options for EPUB output
