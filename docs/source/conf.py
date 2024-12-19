@@ -12,8 +12,7 @@ author = 'Chen Wang'
 # -- General configuration
 
 extensions = [
-    'sphinx.ext.duration',
-    'sphinx.ext.doctest',
+    'sphinx.ext.duration', 'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
@@ -29,8 +28,12 @@ intersphinx_disabled_domains = ['std']
 templates_path = ['_templates']
 
 # -- Options for HTML output
-
 html_theme = 'furo'
+
+#Sphinx builds a tree of documents based on the toctree directives contained within the source files. This sets the name of the document containing the master toctree directive, and hence the root of the entire tree. Example:
+#master_doc = 'contents'
+
+
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
