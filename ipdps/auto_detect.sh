@@ -9,7 +9,7 @@ BASE_DIR="$1"
 PROGRAM="$RECORDER_INSTALL_PATH/bin/conflict-detector"
 
 if [[ ! -x "$PROGRAM" ]]; then
-    echo "Program $PROGRAM not found or is not executable."
+    echo "Program $PROGRAM not found. Please make sure $RECORDER_INSTALL_PATH is set properly"
     exit 1
 fi
 

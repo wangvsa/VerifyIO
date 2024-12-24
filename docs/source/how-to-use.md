@@ -8,10 +8,10 @@ Additional scripts ('path/to/verifyio/scripts') are available for exporting resu
 VerifyIO is written in Python, so no installation is required. Ensure that the dependent python packages are installed.These include numpy and networkx.
 Recorder is the tracing tool we use to collect the execution trace of the targeted application. Please follow Recorder's [document](https://recorder.readthedocs.io) to install it. Once installed, make sure to set `$RECORDER_INSTALL_PATH` to the location of Recorder. 
 
-### Usecases:
-Case 1: You want to study your own applications. You need to run the applicatin with Recorder to generate the execution trace, then run VerifyIO on the trace file to perform the verification. Therefore, you can start with step 1.
+### Usage:
 
-Case 2: If you just want to try out VerifyIO and don't want to trace any application, you can download some of the uploaded traces [here]() and start with step 2. Those are the traces used for the IPDPS paper. You are also welcome to read the reproducibility page, which provides instuctions to reproduce the results presented in the IPDPS paper.
+- Case 1: You want to study your own applications. You need to run the applicatin with Recorder to generate the execution trace, then run VerifyIO on the trace file to perform the verification. Therefore, you can start with step 1.
+- Case 2: If you just want to try out VerifyIO and don't want to trace any application, you can download some of the uploaded traces [here]() and start with step 2. Those are the traces used for the IPDPS paper. You are also welcome to read the reproducibility page, which provides instuctions to reproduce the results presented in the IPDPS paper.
 
 
 #### Step 1:  Run the application with Recorder to generate traces.
@@ -26,29 +26,34 @@ For detailed information on the Recorder and guidance on its usage, please refer
 
 #### Step 2: Conflict Detection
 
-Run the conflict detector to report **potential** conflicting I/O accesses. Those acesses are only potentially conflicting as here we do not take happens-before order into consideration yet.
+Run the conflict detector to report conflicting I/O accesses. A conflict pair involves two I/O operations that access an overlapping range of the same file and at least one is a write.
 To detect conflicts, use the `conflict-detector` tool from Recorder:
 
 ```bash
-$RECORDER_INSTALL_PATH/bin/conflict-detector /path/to/trace
+$RECORDER_INSTALL_PATH/bin/conflict-detector /path/to/trace-folder
 ```
-This command will write all potential conflicts found to the file `/path/to/traces/conflicts.txt`
+This command will write all detected conflicts to the file `/path/to/trace-folder/conflicts.txt`
 
 #### Step 3: Semantic Verification
 
-The next step is to run the semantic verification using [`verifyio.py`](https://github.com/uiuc-hpc/Recorder/tree/dev/tools/verifyio). It checks if those potential conflicting operations are properly synchronzied. By default, MPI-IO semantics and the vector clock algorithm are used for verification.
+The next step is to run the semantic verification using `verifyio.py`. It checks if the detected conflicting accesses are properly synchronzied. By default, MPI-IO semantics and the vector clock algorithm are used for verification.
 
 
 ```bash
-python /path/to/verifyio.py /path/to/trace
+python ./verifyio.py /path/to/trace
+
+
+# Verifying POSIX consistsency:
+python ./verifyio.py /path/to/trace --semantics=POSIX
 ```
+
 Available arguments:
 * --semantics: Specifies the I/O semantics to verify. Choices are: POSIX, MPI-IO (default), Commit, Session, Custom
 * --algorithm: Specifies the algorithm for verification. Choices are: 1: Graph reachability 2: Transitive closure 3: Vector clock (default) 4: On-the-fly MPI check
 * --semantic_string: A custom semantic string for verification. Default is: "c1:+1[MPI_File_close, MPI_File_sync] & c2:-1[MPI_File_open, MPI_File_sync]""
 * --show_details: Displays details of the conflicts.
 * --show_summary: Displays a summary of the conflicts.
-* --show_full_chain: Displays the full call chain of the conflicts.
+* --show_full_chain: Displays the call chain of the conflicts.
 
 
 **Note on step 3:**
