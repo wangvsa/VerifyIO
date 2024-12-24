@@ -1,14 +1,14 @@
 # How to use VerifyIO
 The workflow for VerifyIO can generally be divided into three independent steps (Step 1 - Step 3). This process requires [Recorder](https://github.com/uiuc-hpc/Recorder/tree/dev), [VerifyIO](https://github.com/uiuc-hpc/Recorder/tree/dev/tools/verifyio), and the corresponding traces. Additional scripts ('path/to/verifyio/scripts') are available for exporting results as CSV files and visualizing them (Step 4 and Step 5).
 
-## Usecase:
+## Usecases:
 Case 1: You want to study your own applications. You need to run the applicatin with Recorder to generate the execution trace, then run VerifyIO on the trace file to perform the verification. Therefore, you can start with step 1.
 
 
-Case 2: If you just want to try out VerifyIO and don't want to trace any application, you can download some of the uploaded traces[here]() and start with step 2. Those are the traces used for the IPDPS paper. You are also welcome to read the reproducibility page, which provides instuctions to reproduce the results presented in the IPDPS paper.
+Case 2: If you just want to try out VerifyIO and don't want to trace any application, you can download some of the uploaded traces [here]() and start with step 2. Those are the traces used for the IPDPS paper. You are also welcome to read the reproducibility page, which provides instuctions to reproduce the results presented in the IPDPS paper.
 
 
-## Prerequisites:
+## Prerequisite:
 
 Make sure `$RECORDER_INSTALL_PATH` is the install location of Recorder. 
 
