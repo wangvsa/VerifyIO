@@ -1,21 +1,11 @@
 # How to use VerifyIO
-VerifyIO collects execution traces, detects data conflicts, and verifies proper synchronization against specified consistency models. 
-The workflow for VerifyIO can generally be divided into three independent steps (Step 1 - Step 3). This process requires [Recorder](https://github.com/uiuc-hpc/Recorder/tree/dev), [VerifyIO](https://github.com/uiuc-hpc/Recorder/tree/dev/tools/verifyio), and the corresponding traces.
+The workflow for VerifyIO can generally be divided into three independent steps (Step 1 - Step 3). This process requires [Recorder](https://github.com/uiuc-hpc/Recorder/tree/dev), [VerifyIO](https://github.com/uiuc-hpc/Recorder/tree/dev/tools/verifyio), and the corresponding traces. Additional scripts ('path/to/verifyio/scripts') are available for exporting results as CSV files and visualizing them (Step 4 and Step 5).
 
-Additional scripts ('path/to/verifyio/scripts') are available for exporting results as CSV files and visualizing them (Step 4 and Step 5). The verification can be performed in a batched manner for multiple traces. For this, alternative steps can be followed to handle multiple traces more efficiently.
-
-## Features
-- Trace Collection: VerifyIO relines on Recorder to capture the detailed execution trace, which including calls from POSIX, MPI and high-level I/O libraryes. The Recorder trace can also be used for other analysis.
-- Conflict Detection: Identifies conflicting I/O operations between processes.
-- Synchronization Verification: Verifies proper synchronization according to specified consistency models. We currently support four widely-used consistency models: POSIX, Commit, Session, and MPI-IO.
-- Consistency Issue Reporting: Provides call-chain information for improperly synchronized conflicts to aid debugging.
+## Usecase:
+Case 1: You want to study your own applications. You need to run the applicatin with Recorder to generate the execution trace, then run VerifyIO on the trace file to perform the verification. Therefore, you can start with step 1.
 
 
-## Usage:
-Case 1: You want to study your own applications. You need to run the applicatin with Recorder to generate the execution trace, then run VerifyIO on the trace file to perform the verification.
-Again, please follow the Recorder document for installing Recorder and tracing.
-
-If you just want to try out VerifyIO and don't want to trace any application, you can download some of the traces I uploaded here. Those are the traces I used for my IPDPS paper. You are also welcome to read the reproducibility page, which provides instuctions to reproduce the results presented in the IPDPS paper.
+Case 2: If you just want to try out VerifyIO and don't want to trace any application, you can download some of the uploaded traces[here]() and start with step 2. Those are the traces used for the IPDPS paper. You are also welcome to read the reproducibility page, which provides instuctions to reproduce the results presented in the IPDPS paper.
 
 
 ## Prerequisites:
