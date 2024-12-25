@@ -8,8 +8,8 @@ fi
 BASE_DIR="$1"
 DETECTOR="$RECORDER_INSTALL_PATH/bin/conflict-detector"
 
-if [[ ! -x "$PROGRAM" ]]; then
-    echo "Program $PROGRAM not found. Please make sure $RECORDER_INSTALL_PATH is set properly"
+if [[ ! -f "$DETECTOR" ]]; then
+    echo "$DETECTOR not found. Please make sure RECORDER_INSTALL_PATH is set properly"
     exit 1
 fi
 
