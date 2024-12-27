@@ -6,28 +6,24 @@ To ensure reproducibility, we provide a Docker environment containing the requir
 
 Please make sure Docker is installed on your system before proceeding.
 
-### Pull the VerifyIO Docker image
-
+Pull the VerifyIO Docker image:
 ```bash
 docker pull verifyio-image:v1
 ```
 
-### Run the VerifyIO Docker image
-
-First, create a local directory to save the results:
-
+Create a local directory to save the results:
 ```bash
 mkdir ~/ipdps-verifyio-result
 ```
 
-Then run the Docker iamge.
+Then run the Docker iamge:
 ```bash
 docker run --rm -it -v ~/ipdps-verifyio-result:/ipdps --verifyio-image:v1 /bin/bash
 ```
 
 Notes:
-- The --rm parameter automatically deletes the Docker container after exiting.
-- The -v option mounts your local directory to the Docker container’s /ipdps directory, ensuring data persistence outside the container.
+- The `--rm` parameter automatically deletes the Docker container after exiting.
+- The `-v` option mounts your local directory to the Docker container’s /ipdps directory, ensuring data persistence outside the container.
 
 
 ## 2. Reproduce the IPDPS result:
@@ -83,7 +79,7 @@ erange_fill	  inq_recsizef	  null_args		  test_vard	      tst_info		vectors
 error_precedence  iput_all_kinds  one_record		  test_vard_multiple  tst_max_var_dims
 ```
 
-### Conflict detection:
+### Conflict detection
 
 To detect conflicts across multiple traces, use the `01-detect-conflicts.sh` script. Specify the directory containing the library test traces.
 For example, the following command performs conflict detection on all PnetCDF tests:
@@ -101,7 +97,7 @@ For example, the following command performs semantic verification on all PnetCDF
 $VERIFYIO_INSTALL_PATH/ipdps/02-perform-verification.sh ./dataset/pnetcdf-1.13.0-recorder-traces
 ```
 
-## Step 3. Post-Processing and Visualization:
+## 3. Post-Processing and Visualization:
 
 ### Heatmap Plot
 
