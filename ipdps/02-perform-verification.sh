@@ -27,5 +27,6 @@ for dir in "$BASE_DIR"/*/; do
         for semantic in "${SEMANTICS[@]}"; do
             python3 "$PROGRAM" "$dir" "--semantics=$semantic"
         done
+	echo "==============================================="
     fi
 done
