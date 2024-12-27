@@ -11,3 +11,5 @@ The verification workflow is trace-driven and consists of four steps:
 
 ![verifyio-workflow](./_static/verifyio-workflow.png)
 
+![verifyio-workflow-example](./_static/verifyio-workflow-example.png)
+
