@@ -14,7 +14,7 @@ class VerifyIO:
         self.algorithm = args.algorithm             # Algorithm for verification
         self.show_summary = args.show_summary       # whether to show summary in the end
         self.show_details = args.show_details       # whether to show violation details
-        self.show_full_chain = args.show_full_chain # whether to show full call chain
+        self.show_call_chain = args.show_call_chain # whether to show full call chain
         if self.semantics == "Custom":
             self.semantic_string = args.semantic_string # Custom semantics string
         self.reader = None                          # RecorderReader
@@ -304,8 +304,8 @@ def get_violation_info(nodes: list, vio, summary, this_pair_ok):
         
         return call_chain
 
-    def get_call_chain(node, reader, show_full_chain=False):
-        if show_full_chain:
+    def get_call_chain(node, reader, show_call_chain=False):
+        if show_call_chain:
             return get_call_full_chain(node=node, reader=reader)
         else:
             return get_call_partial_chain(node=node, reader=reader)
@@ -317,8 +317,8 @@ def get_violation_info(nodes: list, vio, summary, this_pair_ok):
     def build_call_chain_str(call_chain, reader):
         return "-->".join(reader.funcs[cc.func_id] for cc in call_chain)
 
-    left_call_chain = get_call_chain(nodes[0], vio.reader, vio.show_full_chain)
-    right_call_chain = get_call_chain(nodes[1], vio.reader, vio.show_full_chain)
+    left_call_chain = get_call_chain(nodes[0], vio.reader, vio.show_call_chain)
+    right_call_chain = get_call_chain(nodes[1], vio.reader, vio.show_call_chain)
     file = vio.reader.records[nodes[0].rank][nodes[0].seq_id].args[0].decode('utf-8')
     if len(left_call_chain) > 0 and len(right_call_chain) > 0:
         summary['c_ranks_cnt'][nodes[0].rank][nodes[1].rank] += 1
@@ -367,7 +367,7 @@ if __name__ == "__main__":
     parser.add_argument("--semantic_string", type=str, default="c1:+1[MPI_File_close, MPI_File_sync] & c2:-1[MPI_File_open, MPI_File_sync]")
     parser.add_argument("--show_details", action="store_true", help="Show details of the conflicts")
     parser.add_argument("--show_summary", action="store_true", help="Show summary of the conflicts")
-    parser.add_argument("--show_full_chain", action="store_true", help="Show the full call chain of the conflicts")
+    parser.add_argument("--show_call_chain", action="store_true", help="Show the call chain of the conflicting operations")
     args = parser.parse_args()
 
     vio = VerifyIO(args)
