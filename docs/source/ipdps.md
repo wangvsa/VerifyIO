@@ -28,7 +28,7 @@ Notes:
 
 ## 2. Reproduce the IPDPS result:
 
-Once inside the Docker container, you should be at the /ipdps directory
+Once inside the Docker container, you should be at the /ipdps directory:
 
 ```bash
 root@933cb4b115cb:/ipdps# pwd
@@ -50,6 +50,7 @@ root@933cb4b115cb:/ipdps# echo $VERIFYIO_INSTALL_PATH/
 
 Our paper verifies the consistency semantics of 91 built-in tests from three high-level I/O libraries against four consistency models.
 The dataset used in our paper is available on [Zenodo](https://doi.org/10.5281/zenodo.14553174).
+
 Use the provided script `01-download-dataset.sh` to download and extract the trace files:
 ```bash
 $VERIFYIO_INSTALL_PATH/ipdps/00-download-dataset.sh
@@ -82,6 +83,7 @@ error_precedence  iput_all_kinds  one_record		  test_vard_multiple  tst_max_var_
 ### 2.2 Conflict detection
 
 To detect conflicts across multiple traces, use the `02-detect-conflicts.sh` script. Specify the directory containing the library test traces.
+
 For example, the following command performs conflict detection on all PnetCDF tests:
 ```bash
 $VERIFYIO_INSTALL_PATH/ipdps/01-detect-conflicts.sh ./dataset/pnetcdf-1.13.0-recorder-traces
