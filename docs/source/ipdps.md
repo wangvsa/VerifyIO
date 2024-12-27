@@ -46,11 +46,11 @@ root@933cb4b115cb:/ipdps# echo $VERIFYIO_INSTALL_PATH/
 /source/VerifyIO/
 ```
 
-### Download dataset
+### 2.1 Download dataset
 
 Our paper verifies the consistency semantics of 91 built-in tests from three high-level I/O libraries against four consistency models.
 The dataset used in our paper is available on [Zenodo](https://doi.org/10.5281/zenodo.14553174).
-Use the provided script `00-download-dataset.sh` to download and extract the trace files:
+Use the provided script `01-download-dataset.sh` to download and extract the trace files:
 ```bash
 $VERIFYIO_INSTALL_PATH/ipdps/00-download-dataset.sh
 ```
@@ -79,17 +79,17 @@ erange_fill	  inq_recsizef	  null_args		  test_vard	      tst_info		vectors
 error_precedence  iput_all_kinds  one_record		  test_vard_multiple  tst_max_var_dims
 ```
 
-### Conflict detection
+### 2.2 Conflict detection
 
-To detect conflicts across multiple traces, use the `01-detect-conflicts.sh` script. Specify the directory containing the library test traces.
+To detect conflicts across multiple traces, use the `02-detect-conflicts.sh` script. Specify the directory containing the library test traces.
 For example, the following command performs conflict detection on all PnetCDF tests:
 ```bash
 $VERIFYIO_INSTALL_PATH/ipdps/01-detect-conflicts.sh ./dataset/pnetcdf-1.13.0-recorder-traces
 ```
 
-### Semantic verification
+### 2.3 Semantic verification
 
-For semantic verification, use the `02-perform-verification.sh` script. Provide the directory containing the trace files as an argument.
+For semantic verification, use the `03-perform-verification.sh` script. Provide the directory containing the trace files as an argument.
 By default, this script verifies all supported semantics, including POSIX, MPI-IO, Commit, and Session, using a vector clock algorithm.
 
 For example, the following command performs semantic verification on all PnetCDF tests:
