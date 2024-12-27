@@ -1,49 +1,45 @@
 # IPDPS'25 Reproducibility Effort
 
-To ensure reproducibility, a Docker environment containing the required source code and traces has been provided. Since the standard test cases of the corresponding high-level I/O libraries were analyzed using VerifyIO for the IPDPS paper, a script was developed and adapted to automate this process. This enables the verification to be performed in batches for multiple traces. The following steps outline the process for handling multiple traces more efficiently:
+To ensure reproducibility, we provide a Docker environment containing the required source code and trace files. The standard test cases of the corresponding high-level I/O libraries were analyzed using VerifyIO, as presented in the IPDPS paper. To streamline this process, a script was developed for batch verification across multiple traces. Follow the steps below to reproduce our results efficiently.
 
 ## 1. Install and Run Docker
 
-### Prerequisites
+Please make sure Docker is installed on your system before proceeding.
 
-- Docker installed on your local system
-- Ensure that you have the correct Docker image available locally. If not, pull the image from a Docker registry using:
-
-### Pull our docker image
+### Pull the VerifyIO Docker image
 
 ```bash
 docker pull verifyio-image:v1
 ```
 
-### Run the verifyio docker image
+### Run the VerifyIO Docker image
 
-First, let's create a local directory to save the result.
+First, create a local directory to save the results:
 
-```
+```bash
 mkdir ~/ipdps-verifyio-result
 ```
 
-Then run the docker iamge.
+Then run the Docker iamge.
 ```bash
 docker run --rm -it -v ~/ipdps-verifyio-result:/ipdps --verifyio-image:v1 /bin/bash
 ```
 
 Notes:
-- With the `--rm` paramter, the docker container will be deleted after exit
-- The `-v` options mounts your local directory to the docker directory `/ipdps`, so the data saved
-  in the docker image's `/ipdps` will persit even after the docker container has been deleted.
+- The --rm parameter automatically deletes the Docker container after exiting.
+- The -v option mounts your local directory to the Docker container’s /ipdps directory, ensuring data persistence outside the container.
 
 
-### 2. Reproduce the IPDPS result:
+## 2. Reproduce the IPDPS result:
 
-Now the docker container should have started, and you should be at the `/ipdps` directory.
+Once inside the Docker container, you should be at the /ipdps directory
 
 ```bash
 root@933cb4b115cb:/ipdps# pwd
 /ipdps
 ```
 
-Our IPDPS paper presents two tools: Recorder and VerifyIO, both has been installed under the `/source` directory.
+Our IPDPS paper presents two tools: Recorder and VerifyIO. They are pre-compiled and installed in the `/source` directory:
 
 ```bash
 root@933cb4b115cb:/ipdps# ls /source
@@ -56,17 +52,14 @@ root@933cb4b115cb:/ipdps# echo $VERIFYIO_INSTALL_PATH/
 
 ### Download dataset
 
-We have provided several scripts to easily reproduce the results. Next, we will work you through them.
-Our paper studies the consistency compliance of 91 built-in tests from three high-level I/O libraries, we have uploaded
-all trace files on [Zenodo](https://doi.org/10.5281/zenodo.14553174).
-
-Run the following command to download those trace files.
+Our paper verifies the consistency semantics of 91 built-in tests from three high-level I/O libraries against four consistency models.
+The dataset used in our paper is available on [Zenodo](https://doi.org/10.5281/zenodo.14553174).
+Use the provided script `00-download-dataset.sh` to download and extract the trace files:
 ```bash
 $VERIFYIO_INSTALL_PATH/ipdps/00-download-dataset.sh
 ```
 
-The script will download and decompress all trace files under `./dataset` directory.
-
+The script will download, decompress and save all trace files in the `./dataset` directory:
 ```bash
 root@933cb4b115cb:/ipdps# ls ./dataset/*
 dataset/hdf5-1.14.4-3-recorder-traces:
@@ -92,16 +85,18 @@ error_precedence  iput_all_kinds  one_record		  test_vard_multiple  tst_max_var_
 
 ### Conflict detection:
 
-The [`auto_detect.sh`](https://github.com/wangvsa/VerifyIO/blob/main/ipdps/auto_detect.sh) script can be used to process multiple traces and detect conflicts. The script requires the path to the directory containing the traces as an argument. Please adjust the configuartion for resource manager accordingly. 
-
+To detect conflicts across multiple traces, use the `01-detect-conflicts.sh` script. Specify the directory containing the library test traces.
+For example, the following command performs conflict detection on all PnetCDF tests:
 ```bash
 $VERIFYIO_INSTALL_PATH/ipdps/01-detect-conflicts.sh ./dataset/pnetcdf-1.13.0-recorder-traces
 ```
 
 ### Semantic verification
 
-The [`auto_verify.sh`](https://github.com/wangvsa/VerifyIO/blob/main/ipdps/auto_verify.sh) script can be used for verification. This script requires the path to the directory containing the traces, and the path to verifyio as arguments. By default, it verifies all supported semantics, i.e., POSIX, MPI-IO, Commit, Session with Vector clock algorithm.
+For semantic verification, use the `02-perform-verification.sh` script. Provide the directory containing the trace files as an argument.
+By default, this script verifies all supported semantics, including POSIX, MPI-IO, Commit, and Session, using a vector clock algorithm.
 
+For example, the following command performs semantic verification on all PnetCDF tests:
 ```bash
 $VERIFYIO_INSTALL_PATH/ipdps/02-perform-verification.sh ./dataset/pnetcdf-1.13.0-recorder-traces
 ```
