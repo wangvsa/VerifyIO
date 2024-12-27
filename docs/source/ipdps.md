@@ -8,7 +8,7 @@ Please make sure Docker is installed on your system before proceeding.
 
 Pull the VerifyIO Docker image:
 ```bash
-docker pull verifyio-image:v1
+docker pull wangvsa/verifyio
 ```
 
 Create a local directory to save the results:
@@ -18,7 +18,7 @@ mkdir ~/ipdps-verifyio-result
 
 Then run the Docker iamge:
 ```bash
-docker run --rm -it -v ~/ipdps-verifyio-result:/ipdps --verifyio-image:v1 /bin/bash
+docker run --rm -it -v ~/ipdps-verifyio-result:/ipdps wangvsa/verifyio /bin/bash
 ```
 
 Notes:
