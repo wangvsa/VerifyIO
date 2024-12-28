@@ -47,10 +47,10 @@ The next step is to run the semantic verification using `verifyio.py`. It checks
 python ./verifyio.py /path/to/trace-folder
 
 # Example 1: verifying POSIX consistsency:
-python ./verifyio.py /path/to/trace --semantics=POSIX
+python ./verifyio.py /path/to/trace-folder --semantics=POSIX
 
 # Example 2: verifying Commit consistsency:
-python ./verifyio.py /path/to/trace --semantics=Commit
+python ./verifyio.py /path/to/trace-folder --semantics=Commit
 ```
 
 Available arguments:
@@ -67,19 +67,22 @@ The verification code first matches all MPI calls to build a happens-before grap
 
 Given a conflicing I/O pair of accesses *(op1, op2)*. With the help of the happens-before graph, we can figure out if op1 happens-before op2. If so, they are properly synchronzied. This works well for the POSIX semantics. For example, consider this path: 
 > op1(by rank1) -> send(by rank1) -> recv(by rank2) -> op2(by rank2). 
+
 This path tells us op1 and op2 are properly synchronized according to the POSIX semantics.
    
 However, things are a little different with other consistency models. 
 Take MPI-IO consistency as an example here, the MPI standard requires the use of the `sync-barrier-sync` construct to guarnatee sequencial consistency. In other words, the MPI-IO semantics (nonatomic mode) requires a `sync-barrier-sync` in between two conflicting operations for them to be considered properly synchronized. Here, the `barrier` can be replaced by a send-recv or a collective call. The `sync` is one of `MPI_File_open`, `MPI_File_close`, or `MPI_File_sync`.
 
 Note that, according to the MPI standard, not all collective calls guarantee the temporal order (i.e., the `barrier` in the `sync-barrier-sync` construct) between the involved processes. The MPI standard explictly says the following collectives are guaranteed to impose the temporal order:
-> - MPI_Barrier
-> - MPI_Allgather
-> - MPI_Alltoall and their V and W variants
-> - MPI_Allreduce
-> - MPI_Reduce_scatter
-> - MPI_Reduce_scatter_block
 
+| ----------------------------------------- |
+| - MPI_Barrier                             |
+| - MPI_Allgather                           |
+| - MPI_Alltoall and their V and W variants |
+| - MPI_Allreduce                           |
+| - MPI_Reduce_scatter                      |
+| - MPI_Reduce_scatter_block                |
+| ----------------------------------------- |
 
 #### Step 4: Export Results to CSV
 
