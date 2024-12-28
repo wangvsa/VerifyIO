@@ -25,7 +25,7 @@ mpirun -np N -env LD_PRELOAD $RECORDER_INSTALL_PATH/lib/librecorder.so ./your-ap
 srun -n4 -N1 --overlap --export=ALL,LD_PRELOAD=$RECORDER_INSTALL_PATH/lib/librecorder.so ./your-app
 flux run -n 4 --env LD_PRELOAD=$RECORDER_INSTALL_PATH/lib/librecorder.so ./your-app
 ```
-For more information on the Recorder and guidance on its usage, please refer to: https://recorder.readthedocs.io/latest/overview.html
+For more information on the Recorder and guidance on its usage, please refer to its [document](https://recorder.readthedocs.io/latest/overview.html).
 
 #### Step 2: Conflict detection
 
