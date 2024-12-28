@@ -75,14 +75,14 @@ Take MPI-IO consistency as an example here, the MPI standard requires the use of
 
 Note that, according to the MPI standard, not all collective calls guarantee the temporal order (i.e., the `barrier` in the `sync-barrier-sync` construct) between the involved processes. The MPI standard explictly says the following collectives are guaranteed to impose the temporal order:
 
-| ----------------------------------------- |
-| - MPI_Barrier                             |
-| - MPI_Allgather                           |
-| - MPI_Alltoall and their V and W variants |
-| - MPI_Allreduce                           |
-| - MPI_Reduce_scatter                      |
-| - MPI_Reduce_scatter_block                |
-| ----------------------------------------- |
+|Collective Calls that Guarantee Temporal Order|
+| --------------------------------------- |
+| MPI_Barrier                             |
+| MPI_Allgather                           |
+| MPI_Alltoall and their V and W variants |
+| MPI_Allreduce                           |
+| MPI_Reduce_scatter                      |
+| MPI_Reduce_scatter_block                |
 
 #### Step 4: Export Results to CSV
 
