@@ -7,6 +7,7 @@ Additional scripts are available for exporting results as CSV files and visualiz
 
 
 Recorder is the tracing tool we use to collect the execution trace of the targeted application. Please follow Recorder's [document](https://recorder.readthedocs.io) to install it. Once installed, make sure to set `$RECORDER_INSTALL_PATH` to the location of Recorder. 
+
 VerifyIO is written in Python, so no installation is required. Ensure that the dependent python packages are installed. These include numpy and networkx.
 
 ### Usage:
@@ -26,7 +27,7 @@ flux run -n 4 --env LD_PRELOAD=$RECORDER_INSTALL_PATH/lib/librecorder.so ./your-
 ```
 For more information on the Recorder and guidance on its usage, please refer to: https://recorder.readthedocs.io/latest/overview.html
 
-#### Step 2: Conflict Detection
+#### Step 2: Conflict detection
 
 Run the conflict detector to report conflicting I/O accesses. A conflict pair involves two I/O operations that access an overlapping range of the same file and at least one is a write.
 To detect conflicts, use the `conflict-detector` tool from Recorder:
@@ -36,7 +37,7 @@ $RECORDER_INSTALL_PATH/bin/conflict-detector /path/to/trace-folder
 ```
 This command will write all detected conflicts to the file `/path/to/trace-folder/conflicts.dat`. Note this `conflits.dat` file is not human-readable, but is required for the next step.
 
-#### Step 3: Semantic Verification
+#### Step 3: Semantic verification
 
 The next step is to run the semantic verification using `verifyio.py`. It checks if the detected conflicting accesses are properly synchronzied. By default, MPI-IO semantics and the vector clock algorithm are used for verification.
 
@@ -64,18 +65,20 @@ Available arguments:
 
 The verification code first matches all MPI calls to build a happens-before graph representing the happens-before order. Each node in the graph represents either an MPI call or an I/O call. If there exists a path from node A to node B, then A must happens-before B. 
 
-Given a conflicing I/O pair of accesses *(op1, op2)*. With the help of the happens-before graph, we can figure out if op1 happens-before op2. If so, they are properly synchronzied. This works well for the POSIX semantics. For example, consider this path: op1(by rank1)->send(by rank1)->recv(by rank2)->op2(by rank2). This path tells us op1 and op2 are properly synchronized according to the POSIX semantics.
+Given a conflicing I/O pair of accesses *(op1, op2)*. With the help of the happens-before graph, we can figure out if op1 happens-before op2. If so, they are properly synchronzied. This works well for the POSIX semantics. For example, consider this path: 
+> op1(by rank1) -> send(by rank1) -> recv(by rank2) -> op2(by rank2). 
+This path tells us op1 and op2 are properly synchronized according to the POSIX semantics.
    
 However, things are a little different with other consistency models. 
 Take MPI-IO consistency as an example here, the MPI standard requires the use of the `sync-barrier-sync` construct to guarnatee sequencial consistency. In other words, the MPI-IO semantics (nonatomic mode) requires a `sync-barrier-sync` in between two conflicting operations for them to be considered properly synchronized. Here, the `barrier` can be replaced by a send-recv or a collective call. The `sync` is one of `MPI_File_open`, `MPI_File_close`, or `MPI_File_sync`.
 
 Note that, according to the MPI standard, not all collective calls guarantee the temporal order (i.e., the `barrier` in the `sync-barrier-sync` construct) between the involved processes. The MPI standard explictly says the following collectives are guaranteed to impose the temporal order:
- - MPI_Barrier
- - MPI_Allgather
- - MPI_Alltoall and their V and W variants
- - MPI_Allreduce
- - MPI_Reduce_scatter
- - MPI_Reduce_scatter_block
+> - MPI_Barrier
+> - MPI_Allgather
+> - MPI_Alltoall and their V and W variants
+> - MPI_Allreduce
+> - MPI_Reduce_scatter
+> - MPI_Reduce_scatter_block
 
 
 #### Step 4: Export Results to CSV
