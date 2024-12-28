@@ -29,9 +29,9 @@ The `VerifyIO <https://github.com/wangvsa/VerifyIO>`_ project is an open-source 
    :maxdepth: 1
    :hidden:
 
+   consistency-model
    workflow
    how-to-use
-   consistency-model
    ipdps
 
 
