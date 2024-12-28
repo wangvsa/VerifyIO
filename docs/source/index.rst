@@ -19,10 +19,10 @@ To tackle these challenges, we propose a trace-driven four-step verification wor
 Although a properly synchronized execution does not guarantee that the entire application is synchronized correctly, because applications may follow different I/O execution paths. In our experience, this is rare though, most HPC applications tend to have a few if not one I/O path. More importantly, when an execution is found to be improperly synchronized, it indicates the presence of data races, suggesting potential consistency issues or implementation bugs in either the application or the I/O library.
 
 The `VerifyIO <https://github.com/wangvsa/VerifyIO>`_ project is an open-source project that implements the above-mentioned verification workflow. VerifyIO contains four components, one for each step of the workflow:
-(1) \emph{a tracing tool} that collects execution traces with sufficient information for later steps
-(2) \emph{a conflict detection tool} that identifies data conflicts within the execution traces
-(3) \emph{a MPI matching tool} that matches MPI calls to establish the temporal order between all conflicting operations
-(4) \emph{a verification tool} that checks whether identified conflicts are properly synchronized according to the target consistency model.
+(1) *a tracing tool* that collects execution traces with sufficient information for later steps
+(2) *a conflict detection tool* that identifies data conflicts within the execution traces
+(3) *an MPI matching tool* that matches MPI calls to establish the temporal order between all conflicting operations
+(4) *a verification tool* that checks whether identified conflicts are properly synchronized according to the target consistency model.
 
 
 .. toctree::
