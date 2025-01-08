@@ -53,7 +53,7 @@ The dataset used in our paper is available on [Zenodo](https://doi.org/10.5281/z
 
 Use the provided script `01-download-dataset.sh` to download and extract the trace files:
 ```bash
-$VERIFYIO_INSTALL_PATH/ipdps/00-download-dataset.sh
+$VERIFYIO_INSTALL_PATH/ipdps/01-download-dataset.sh
 ```
 
 The script will download, decompress and save all trace files in the `./dataset` directory:
@@ -86,7 +86,7 @@ To detect conflicts across multiple traces, use the `02-detect-conflicts.sh` scr
 
 For example, the following command performs conflict detection on all PnetCDF tests:
 ```bash
-$VERIFYIO_INSTALL_PATH/ipdps/01-detect-conflicts.sh ./dataset/pnetcdf-1.13.0-recorder-traces
+$VERIFYIO_INSTALL_PATH/ipdps/02-detect-conflicts.sh ./dataset/pnetcdf-1.13.0-recorder-traces
 ```
 
 ### 2.3 Semantic verification
@@ -96,7 +96,7 @@ By default, this script verifies all supported semantics, including POSIX, MPI-I
 
 For example, the following command performs semantic verification on all PnetCDF tests:
 ```bash
-$VERIFYIO_INSTALL_PATH/ipdps/02-perform-verification.sh ./dataset/pnetcdf-1.13.0-recorder-traces
+$VERIFYIO_INSTALL_PATH/ipdps/03-perform-verification.sh ./dataset/pnetcdf-1.13.0-recorder-traces
 ```
 
 ## 3. Post-Processing and Visualization:
