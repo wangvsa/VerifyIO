@@ -96,17 +96,25 @@ By default, this script verifies all supported semantics, including POSIX, MPI-I
 
 For example, the following command performs semantic verification on all PnetCDF tests:
 ```bash
-$VERIFYIO_INSTALL_PATH/ipdps/03-perform-verification.sh ./dataset/pnetcdf-1.13.0-recorder-traces
+mkdir results
+$VERIFYIO_INSTALL_PATH/ipdps/03-perform-verification.sh ./dataset/pnetcdf-1.13.0-recorder-traces >> ./results/PnetCDF
 ```
 
 ## 3. Post-Processing and Visualization:
 
 ### Heatmap Plot
 
-For visualizing up to three CSV files in a single heatmap, use the following argument:
+To visualize all the test cases (i.e., HDF5, NetCDF, and PnetCDF) in a single heatmap, ensure that the result files are located in the ./result directory and named with the corresponding identifiers: HDF5, NetCDF, or PnetCDF. 
 
 ```bash
-python verifyio_plot_heatmap.py --files="/path/to/output1.csv" "/path/to/output2.csv" "/path/to/output3.csv"
+root@933cb4b115cb:/ipdps# ls results/
+HDF5 NetCDF PnetCDF 
+```
+
+Then, use the following script to generate the heatmap visualization:
+
+```bash
+$VERIFYIO_INSTALL_PATH/ipdps/04-post-processing-visualization.sh ./results
 ```
 
 Finally, exit the container once you are done.

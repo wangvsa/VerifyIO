@@ -18,8 +18,8 @@ if [[ ! -f "$PROGRAM" ]]; then
 fi
 
 
-#SEMANTICS=("POSIX" "MPI-IO" "Commit" "Session")
-SEMANTICS=("POSIX" "MPI-IO")
+SEMANTICS=("POSIX" "MPI-IO" "Commit" "Session")
+#SEMANTICS=("POSIX" "MPI-IO")
 
 for dir in "$BASE_DIR"/*/; do
     if [ -d "$dir" ]; then
