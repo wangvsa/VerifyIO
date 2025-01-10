@@ -8,7 +8,7 @@ import pandas as pd
 #            'Vector Clock (secs)', 'Verification (secs)',
 #            'Semantics Violations', 'Total Conflicts', 'Semantics']
 
-CSV_HEADER=['Test', 'io_time', 'match_mpi_calls', 'mpi_edges', 'build_happens-before_graph', 'nodes','run_the_algorithm', 'verification_time', 'total_semantic_violation', 'total_conflict_pairs', 'Semantics']
+CSV_HEADER=['test', 'io_time', 'match_mpi_calls', 'mpi_edges', 'build_happens-before_graph', 'nodes','run_the_algorithm', 'verification_time', 'total_semantic_violation', 'total_conflict_pairs', 'semantics']
 
 def parser(txt_file):
     with open(txt_file, "r") as file:
@@ -46,9 +46,9 @@ def parser(txt_file):
         elif conflict_pairs_match := conflict_pairs_regex.search(line):
             entry["total_conflict_pairs"] = conflict_pairs_match.group(1)
         elif verification_regex_match := verification_regex.search(line):
-            entry["Semantics"] = verification_regex_match.group(1)
+            entry["semantics"] = verification_regex_match.group(1)
             entry["verification_time"] = verification_regex_match.group(2)
-            entry["Test"] = test_name 
+            entry["test"] = test_name 
             data.append(entry)
             entry = {}
 
@@ -58,11 +58,11 @@ def reshape_and_write_csv(parsed_data, csv_file):
     df = pd.DataFrame(parsed_data, columns=CSV_HEADER)
     if args.group_by_test:
         df_no_conflicts = df.drop(columns='total_conflict_pairs')
-        df_pivot = df_no_conflicts.pivot(index='Test', columns='Semantics')
+        df_pivot = df_no_conflicts.pivot(index='test', columns='semantics')
         df_pivot.columns = ['_'.join(col).strip() for col in df_pivot.columns.values]
         df_pivot = df_pivot.reset_index()
-        df_total_conflicts = df[['Test', 'total_conflict_pairs']].drop_duplicates()
-        df_pivot = pd.merge(df_pivot, df_total_conflicts, on='Test')
+        df_total_conflicts = df[['test', 'total_conflict_pairs']].drop_duplicates()
+        df_pivot = pd.merge(df_pivot, df_total_conflicts, on='test')
         df_pivot.to_csv(csv_file, index=False)
     else:
         df.to_csv(csv_file, index=False)

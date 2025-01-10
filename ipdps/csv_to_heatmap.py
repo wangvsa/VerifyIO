@@ -1,8 +1,9 @@
-import argparse
+#!/usr/bin/python3
+
+import os, sys
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import os
 import matplotlib.gridspec as gridspec
 from matplotlib.colors import LogNorm
 import numpy as np
@@ -13,11 +14,11 @@ def remove_after_last_dash(column_name):
 
 
 def plot_multi_heat_map(file_paths):
-
-    plt.rcParams.update({
-        "text.usetex": True,
-        "font.family": "Times Roman"
-    })
+    # install latex to use this
+    #plt.rcParams.update({
+    #    "text.usetex": True,
+    #    "font.family": "Times Roman"
+    #})
     title_fontsize = 14
     label_fontsize = 14
     tick_fontsize = 10
@@ -36,7 +37,7 @@ def plot_multi_heat_map(file_paths):
     vmax = -np.inf
     for file_path in file_paths:
         df = pd.read_csv(file_path)
-        heatmap_data = df.set_index('directory_name')[[
+        heatmap_data = df.set_index('test')[[
             'total_semantic_violation_POSIX',
             'total_semantic_violation_Commit',
             'total_semantic_violation_Session',
@@ -49,7 +50,7 @@ def plot_multi_heat_map(file_paths):
         file_name = os.path.basename(file_path).replace('.csv', '')
         df = pd.read_csv(file_path)
 
-        heatmap_data = df.set_index('directory_name')[[
+        heatmap_data = df.set_index('test')[[
             'total_semantic_violation_POSIX',
             'total_semantic_violation_Commit', 
             'total_semantic_violation_Session',
@@ -125,17 +126,17 @@ def plot_single_heat_map(file_path):
         """Helper function to process the directory names."""
         return text.rsplit('-', 1)[0]
 
-    plt.rcParams.update({
-        "text.usetex": True,
-        "font.family": "Times Roman"
-    })
+    #plt.rcParams.update({
+    #    "text.usetex": True,
+    #    "font.family": "Times Roman"
+    #})
     title_fontsize = 14
     label_fontsize = 14
     tick_fontsize = 10
 
     # Read data
     df = pd.read_csv(file_path)
-    heatmap_data = df.set_index('directory_name')[[
+    heatmap_data = df.set_index('test')[[
         'total_semantic_violation_POSIX',
         'total_semantic_violation_Commit',
         'total_semantic_violation_Session',
@@ -213,27 +214,9 @@ def plot_single_heat_map(file_path):
     plt.savefig(f'{file_name}_heatmap.png', dpi=800, bbox_inches='tight')
     plt.show()
 
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Process csv file")
-    parser.add_argument(
-        "--file", 
-        type=str, 
-        default=None,
-        help="Path to a single CSV file."
-    )
-    parser.add_argument(
-        "--files", 
-        type=str, 
-        nargs='+',
-        default=["/p/lustre3/zhu22/traces/HDF5.csv", 
-                 "/p/lustre3/zhu22/traces/NetCDF.csv", 
-                 "/p/lustre3/zhu22/traces/PnetCDF.csv"],
-        help="Paths to the CSV files (space-separated)."
-    )
-    args = parser.parse_args()
-    if args.file:
-        plot_single_heat_map(args.file)
+    csv_files = sys.argv[1:]
+    if len(csv_files) = 1:
+        plot_single_heat_map(csv_files[0])
     else:
-        plot_multi_heat_map(args.files)
-        
+        plot_multi_heat_map(csv_files)
