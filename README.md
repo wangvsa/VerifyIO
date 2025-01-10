@@ -1,4 +1,4 @@
 # VerifyIO
 Verifying Adherence to Parallel I/O Consistency Semantics
 
-![heatmap](https://raw.githubusercontent.com/wangvsa/VerifyIO/main/ipdps/ipdps_result_heatmap.png)
+![workflow](https://verifyio.readthedocs.io/en/latest/_images/verifyio-workflow.png)

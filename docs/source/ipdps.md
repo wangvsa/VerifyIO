@@ -116,7 +116,9 @@ For instance, the heatmap figure (Fig. 4) in the paper can be generated using:
 ```bash
 $VERIFYIO_INSTALL_PATH/ipdps/csv_to_heatmap.py $VERIFYIO_INSTALL_PATH/ipdps/result/hdf5.csv $VERIFYIO_INSTALL_PATH/ipdps/result/netcdf.csv $VERIFYIO_INSTALL_PATH/ipdps/result/pnetcdf.csv
 ```
+
 The heatmap figure will be written to the current directory.
+![heatmap](./_static/heatmap.png)
 
 You can also generate a single heatmap from the PnetCDF CSV file you created in step 2.3.
 ```bash
