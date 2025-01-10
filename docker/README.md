@@ -26,7 +26,7 @@ root@933cb4b115cb:/ipdps# echo $VERIFYIO_INSTALL_PATH/
 /source/VerifyIO/
 ```
 
-Developer Notes:
+**Developer Notes:**
 
 Building a new image with tag v0.2 and latest:
 ```bash
