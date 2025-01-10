@@ -28,7 +28,15 @@ root@933cb4b115cb:/ipdps# echo $VERIFYIO_INSTALL_PATH/
 
 Developer Notes:
 
-Building a new image with tag v0.2:
+Building a new image with tag v0.2 and latest:
 ```bash
-docker build -t verifyio:v0.2 ./
+docker build -t wangvsa/verifyio:v0.2 ./
+# this will create the "latest tag"
+docker build -t wangvsa/verifyio ./
+```
+
+Push to the Docker hub
+```bash
+docker push wangvsa/verifyio:v0.2
+docker push wangvsa/verifyio
 ```
