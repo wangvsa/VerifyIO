@@ -40,5 +40,5 @@ done
 # Conver the text output of all tests to a single CSV file
 mkdir -p ./result
 CSV_RESULT_FILE=./result/${LIB_NAME}.csv
-python3 $VERIFYIO_INSTALL_PATH/ipdps/txt_to_csv.py --txt_file=${TEXT_RESULT_FILE} --csv_file=${CSV_RESULT_FILE} --group_by_api
+python3 $VERIFYIO_INSTALL_PATH/ipdps/txt_to_csv.py ${TEXT_RESULT_FILE} ${CSV_RESULT_FILE} --group_by_api
 
