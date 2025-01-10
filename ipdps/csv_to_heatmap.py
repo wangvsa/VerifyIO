@@ -7,6 +7,10 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from matplotlib.colors import LogNorm
 import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
+
+SEMANTICS_NAMES= ['POSIX', 'Commit', 'Session', 'MPI-IO']
 
 def remove_after_last_dash(column_name):
     parts = column_name.rsplit('-', 1)
@@ -57,8 +61,7 @@ def plot_multi_heat_map(file_paths):
             'total_semantic_violation_MPI-IO', 
         ]]
         heatmap_data.index = heatmap_data.index.map(remove_after_last_dash)
-        simplified_columns = ['POSIX', 'Commit', 'Session', 'MPI-IO']
-        heatmap_data.columns = simplified_columns
+        heatmap_data.columns = SEMANTICS_NAMES
         
         # Fill missing data
         heatmap_data.fillna(-1, inplace=True)
@@ -122,9 +125,6 @@ def plot_multi_heat_map(file_paths):
 
 
 def plot_single_heat_map(file_path):
-    def remove_after_last_dash(text):
-        """Helper function to process the directory names."""
-        return text.rsplit('-', 1)[0]
 
     #plt.rcParams.update({
     #    "text.usetex": True,
@@ -144,16 +144,16 @@ def plot_single_heat_map(file_path):
     ]]
 
     heatmap_data.index = heatmap_data.index.map(remove_after_last_dash)
-    simplified_columns = ['POSIX', 'Commit', 'Session', 'MPI-IO']
-    heatmap_data.columns = simplified_columns
+    heatmap_data.columns = SEMANTICS_NAMES
 
     # Fill missing data
     heatmap_data.fillna(-1, inplace=True)
 
     # Mask zeros for separate color mapping
     masked_data = heatmap_data.copy()
-    masked_data.replace(0, np.nan, inplace=True)  # Mask zeros for the heatmap
-    grey_mask = heatmap_data == -1
+    # replace 0 with nan; then later plot nan with green color
+    masked_data.replace(0, np.nan, inplace=True)
+    grey_mask  = heatmap_data == -1
 
     # Determine vmax
     vmax = heatmap_data.max().max()
@@ -216,7 +216,7 @@ def plot_single_heat_map(file_path):
 
 if __name__ == "__main__":
     csv_files = sys.argv[1:]
-    if len(csv_files) = 1:
+    if len(csv_files) == 1:
         plot_single_heat_map(csv_files[0])
     else:
         plot_multi_heat_map(csv_files)
