@@ -22,7 +22,7 @@ SEMANTICS=("POSIX" "MPI-IO" "Commit" "Session")
 # Write all verifyio.py output to a single temporary text file first
 LIB_TRACE_DIR=$(basename ${BASE_DIR})
 ARR=(${LIB_TRACE_DIR//-/ })
-LIB_NAME=${ARR[1]}
+LIB_NAME=${ARR[0]}
 TEXT_RESULT_FILE=/tmp/${LIB_NAME}.txt
 rm -f ${TEXT_RESULT_FILE}
 
