@@ -3,13 +3,18 @@ import re
 import argparse
 import pandas as pd
 
+#CSV_HEADER=['Test', 'Read Trace (secs)', 'Match MPI (secs)',
+#            'Graph Edges', 'Build HB Graph (secs)', 'Graph Nodes',
+#            'Vector Clock (secs)', 'Verification (secs)',
+#            'Semantics Violations', 'Total Conflicts', 'Semantics']
 
-def parser(txt_file, dir_prefix=None):
+CSV_HEADER=['Test', 'io_time', 'match_mpi_calls', 'mpi_edges', 'build_happens-before_graph', 'nodes','run_the_algorithm', 'verification_time', 'total_semantic_violation', 'total_conflict_pairs', 'Semantics']
+
+def parser(txt_file):
     with open(txt_file, "r") as file:
         log_data = file.read()
 
     data = []
-    # dir_regex = re.compile(r"Perform verification on\s+(.*/)")
     dir_regex = re.compile(r"Perform verification on\s+.+/([^/]+)/$")
     io_time_regex = re.compile(r"Step 1. read trace records and conflicts time:\s+([\d.]+)\s+secs")
     mpi_calls_regex = re.compile(r"Step 2. match mpi calls:\s+([\d.]+)\s+secs, mpi edges:\s+(\d+)")
@@ -21,11 +26,11 @@ def parser(txt_file, dir_prefix=None):
 
     lines = log_data.strip().split("\n")
     entry = {}
-    current_name = ""
+    test_name = ""
     for line in lines:
         line = line.strip()
         if dir_match := dir_regex.match(line):
-            current_name = dir_match.group(1)
+            test_name = dir_match.group(1)
         elif io_time_match := io_time_regex.search(line):
             entry["io_time"] = io_time_match.group(1)
         elif mpi_calls_match := mpi_calls_regex.search(line):
@@ -41,62 +46,23 @@ def parser(txt_file, dir_prefix=None):
         elif conflict_pairs_match := conflict_pairs_regex.search(line):
             entry["total_conflict_pairs"] = conflict_pairs_match.group(1)
         elif verification_regex_match := verification_regex.search(line):
-            entry["api"] = verification_regex_match.group(1)
+            entry["Semantics"] = verification_regex_match.group(1)
             entry["verification_time"] = verification_regex_match.group(2)
-            if dir_prefix is None:
-                entry["directory_name"] = current_name
-            else:
-                split_str = current_name.split(dir_prefix)
-                if len(split_str) > 1:
-                    entry["directory_name"] = split_str[1]
-                else:
-                    entry["directory_name"] = None
+            entry["Test"] = test_name 
             data.append(entry)
             entry = {}
 
     return data
 
-
-def to_api_format(data):
-    df = pd.DataFrame(data, columns=[
-        'directory_name', 'io_time', 'match_mpi_calls', 'mpi_edges', 'build_happens-before_graph', 'nodes', 
-        'run_the_algorithm', 'verification_time', 'total_semantic_violation', 'total_conflict_pairs', 'api'
-    ])
-    df_no_conflicts = df.drop(columns='total_conflict_pairs')
-    df_pivot = df_no_conflicts.pivot(index='directory_name', columns='api')
-    df_pivot.columns = ['_'.join(col).strip() for col in df_pivot.columns.values]
-    df_pivot = df_pivot.reset_index()
-    df_total_conflicts = df[['directory_name', 'total_conflict_pairs']].drop_duplicates()
-    df_pivot = pd.merge(df_pivot, df_total_conflicts, on='directory_name')
-    return df_pivot
-
-
-
-def write_to_csv(data, csv_file):
-    with open(csv_file, "a", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=["directory_name", "io_time", "match_mpi_calls", "mpi_edges", "build_happens-before_graph", "nodes", "run_the_algorithm", "verification_time", "total_semantic_violation", "total_conflict_pairs", "api"])
-        writer.writeheader()
-        writer.writerows(data)
-
-    print(f"Data has been written to {csv_file}")
-
-def write_df_to_csv(df, csv_file):
-    df.to_csv(csv_file, index=False)
-    print(f"Data has been written to {csv_file}")
-
-
 def reshape_and_write_csv(parsed_data, csv_file):
-    df = pd.DataFrame(parsed_data, columns=[
-        'directory_name', 'io_time', 'match_mpi_calls', 'mpi_edges', 'build_happens-before_graph', 'nodes', 
-        'run_the_algorithm', 'verification_time', 'total_semantic_violation', 'total_conflict_pairs', 'api'
-    ])
-    if args.group_by_api:
+    df = pd.DataFrame(parsed_data, columns=CSV_HEADER)
+    if args.group_by_test:
         df_no_conflicts = df.drop(columns='total_conflict_pairs')
-        df_pivot = df_no_conflicts.pivot(index='directory_name', columns='api')
+        df_pivot = df_no_conflicts.pivot(index='Test', columns='Semantics')
         df_pivot.columns = ['_'.join(col).strip() for col in df_pivot.columns.values]
         df_pivot = df_pivot.reset_index()
-        df_total_conflicts = df[['directory_name', 'total_conflict_pairs']].drop_duplicates()
-        df_pivot = pd.merge(df_pivot, df_total_conflicts, on='directory_name')
+        df_total_conflicts = df[['Test', 'total_conflict_pairs']].drop_duplicates()
+        df_pivot = pd.merge(df_pivot, df_total_conflicts, on='Test')
         df_pivot.to_csv(csv_file, index=False)
     else:
         df.to_csv(csv_file, index=False)
@@ -106,9 +72,8 @@ if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description="Convert text result to CSV files")
     arg_parser.add_argument("txt_file", type=str,  nargs='?', help="Path to the text result file")
     arg_parser.add_argument("csv_file", type=str,  nargs='?', help="Path to the output CSV file")
-    arg_parser.add_argument("--dir_prefix", type=str, help="Remove the directory prefix", required=False)
-    arg_parser.add_argument("--group_by_api", action="store_true", help="Group data by API", required=False)
+    arg_parser.add_argument("--group_by_test", action="store_true", help="Group data by consistency semantics", required=False)
 
     args = arg_parser.parse_args()
-    parsed_data = parser(args.txt_file, args.dir_prefix)
+    parsed_data = parser(args.txt_file)
     reshape_and_write_csv(parsed_data, args.csv_file)

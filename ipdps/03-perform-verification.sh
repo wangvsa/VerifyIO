@@ -26,12 +26,11 @@ LIB_NAME=${ARR[0]}
 TEXT_RESULT_FILE=/tmp/${LIB_NAME}.txt
 rm -f ${TEXT_RESULT_FILE}
 
-
 for dir in "$BASE_DIR"/*/; do
     if [ -d "$dir" ]; then
-        echo "Perform verification on $dir"
+        echo "Perform verification on $dir" | tee -a ${TEXT_RESULT_FILE}
         for semantic in "${SEMANTICS[@]}"; do
-            python3 $PROGRAM $dir --semantics=$semantic | tee -a $TEXT_RESULT_FILE
+            python3 $PROGRAM $dir --semantics=$semantic | tee -a ${TEXT_RESULT_FILE}
         done
         echo "==============================================="
     fi
@@ -40,5 +39,5 @@ done
 # Conver the text output of all tests to a single CSV file
 mkdir -p ./result
 CSV_RESULT_FILE=./result/${LIB_NAME}.csv
-python3 $VERIFYIO_INSTALL_PATH/ipdps/txt_to_csv.py ${TEXT_RESULT_FILE} ${CSV_RESULT_FILE} --group_by_api
+python3 $VERIFYIO_INSTALL_PATH/ipdps/txt_to_csv.py ${TEXT_RESULT_FILE} ${CSV_RESULT_FILE} --group_by_test
 
