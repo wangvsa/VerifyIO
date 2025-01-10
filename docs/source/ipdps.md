@@ -108,20 +108,20 @@ To visualize all the test cases (i.e., HDF5, NetCDF, and PnetCDF) in a single he
 
 ```bash
 root@933cb4b115cb:/ipdps# ls results/
-HDF5.csv NetCDF.csv PnetCDF.csv 
-```
-
-Otherwise you can use following commands to copy the required csv files into the the ./result directory
-```bash
-root@933cb4b115cb:/ipdps# cp $VERIFYIO_INSTALL_PATH/ipdps/HDF5.csv .
-root@933cb4b115cb:/ipdps# cp $VERIFYIO_INSTALL_PATH/ipdps/NetCDF.csv .
-root@933cb4b115cb:/ipdps# cp $VERIFYIO_INSTALL_PATH/ipdps/PnetCDF.csv .
+HDF5 NetCDF PnetCDF
 ```
 
 Then, use the following script to generate the heatmap visualization:
 
 ```bash
 $VERIFYIO_INSTALL_PATH/ipdps/04-post-processing-visualization.sh ./results
+```
+
+
+Alternatively, if you want to test the heatmap visualization without running the verification first, you can use the following command:
+
+```bash
+python3 $VERIFYIO_INSTALL_PATH/verifyio_plot_violation_heatmap.py --files $VERIFYIO_INSTALL_PATH/ipdps/HDF5.csv $VERIFYIO_INSTALL_PATH/ipdps/NetCDF.csv $VERIFYIO_INSTALL_PATH/ipdps/PnetCDF.csv
 ```
 
 Finally, exit the container once you are done.
