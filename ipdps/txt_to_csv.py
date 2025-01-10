@@ -100,19 +100,15 @@ def reshape_and_write_csv(parsed_data, output_csv):
         df_pivot.to_csv(output_csv, index=False)
     else:
         df.to_csv(output_csv, index=False)
-    
-
 
 
 if __name__ == '__main__':
-    arg_parser = argparse.ArgumentParser(description="Parse log file and export data to CSV")
-    arg_parser.add_argument("path", type=str,  nargs='?', help="Path to the log file", default="/p/lustre3/zhu22/traces/scripts/pnetcdf_ipdps")
-    arg_parser.add_argument("csv_file", type=str,  nargs='?', help="Name of the CSV file to save the data", default="/p/lustre3/zhu22/traces/scripts/pnetcdf_ipdps.csv")
+    arg_parser = argparse.ArgumentParser(description="Convert text result to CSV files")
+    arg_parser.add_argument("txt_file", type=str,  nargs='?', help="Path to the text result file", required=True)
+    arg_parser.add_argument("csv_file", type=str,  nargs='?', help="Path to the output CSV file", required=True)
     arg_parser.add_argument("--dir_prefix", type=str, help="Remove the directory prefix", required=False)
     arg_parser.add_argument("--group_by_api", action="store_true", help="Group data by API", required=False)
 
     args = arg_parser.parse_args()
     parsed_data = parser(args.path, args.dir_prefix)
     reshape_and_write_csv(parsed_data, args.csv_file)
-
-        
