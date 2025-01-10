@@ -4,8 +4,8 @@ import argparse
 import pandas as pd
 
 
-def parser(path, dir_prefix=None):
-    with open(path, "r") as file:
+def parser(txt_file, dir_prefix=None):
+    with open(txt_file, "r") as file:
         log_data = file.read()
 
     data = []
@@ -85,7 +85,7 @@ def write_df_to_csv(df, csv_file):
     print(f"Data has been written to {csv_file}")
 
 
-def reshape_and_write_csv(parsed_data, output_csv):
+def reshape_and_write_csv(parsed_data, csv_file):
     df = pd.DataFrame(parsed_data, columns=[
         'directory_name', 'io_time', 'match_mpi_calls', 'mpi_edges', 'build_happens-before_graph', 'nodes', 
         'run_the_algorithm', 'verification_time', 'total_semantic_violation', 'total_conflict_pairs', 'api'
@@ -97,18 +97,18 @@ def reshape_and_write_csv(parsed_data, output_csv):
         df_pivot = df_pivot.reset_index()
         df_total_conflicts = df[['directory_name', 'total_conflict_pairs']].drop_duplicates()
         df_pivot = pd.merge(df_pivot, df_total_conflicts, on='directory_name')
-        df_pivot.to_csv(output_csv, index=False)
+        df_pivot.to_csv(csv_file, index=False)
     else:
-        df.to_csv(output_csv, index=False)
+        df.to_csv(csv_file, index=False)
 
 
 if __name__ == '__main__':
     arg_parser = argparse.ArgumentParser(description="Convert text result to CSV files")
-    arg_parser.add_argument("txt_file", type=str,  nargs='?', help="Path to the text result file", required=True)
-    arg_parser.add_argument("csv_file", type=str,  nargs='?', help="Path to the output CSV file", required=True)
+    arg_parser.add_argument("txt_file", type=str,  nargs='?', help="Path to the text result file")
+    arg_parser.add_argument("csv_file", type=str,  nargs='?', help="Path to the output CSV file")
     arg_parser.add_argument("--dir_prefix", type=str, help="Remove the directory prefix", required=False)
     arg_parser.add_argument("--group_by_api", action="store_true", help="Group data by API", required=False)
 
     args = arg_parser.parse_args()
-    parsed_data = parser(args.path, args.dir_prefix)
+    parsed_data = parser(args.txt_file, args.dir_prefix)
     reshape_and_write_csv(parsed_data, args.csv_file)
