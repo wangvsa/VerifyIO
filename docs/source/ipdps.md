@@ -108,7 +108,14 @@ To visualize all the test cases (i.e., HDF5, NetCDF, and PnetCDF) in a single he
 
 ```bash
 root@933cb4b115cb:/ipdps# ls results/
-HDF5 NetCDF PnetCDF 
+HDF5.csv NetCDF.csv PnetCDF.csv 
+```
+
+Otherwise you can use following commands to copy the required csv files into the the ./result directory
+```bash
+root@933cb4b115cb:/ipdps# cp $VERIFYIO_INSTALL_PATH/ipdps/HDF5.csv .
+root@933cb4b115cb:/ipdps# cp $VERIFYIO_INSTALL_PATH/ipdps/NetCDF.csv .
+root@933cb4b115cb:/ipdps# cp $VERIFYIO_INSTALL_PATH/ipdps/PnetCDF.csv .
 ```
 
 Then, use the following script to generate the heatmap visualization:
